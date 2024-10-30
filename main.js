@@ -42,7 +42,7 @@ function showPokemonDetail(pokemon){
     pokemonInfo.innerHTML =`
     <h2>${pokemon.name}</h2>
     <img src="${pokemon.image}" alt="${pokemon.name}" >
-    <p>ID: ${pokemon.id} </p>
+    <p>ID: ${pokemon.pokemon_id} </p>
     <p>Altura: ${pokemon.height} m</p>
     <p>Peso: ${pokemon.weight} kg</p>
     <p>Tipos: ${pokemon.types}</p>
