@@ -14,11 +14,53 @@ const itemsPerPage = 50
 const totalPokemons = 1025
 
 async function fetchPokemonData(pokemonId) {
-    const response = await fetch(`http://127.0.0.1:3000/api/pokemon//${pokemonId}`)
+    const response = await fetch(`http://127.0.0.1:3000/api/pokemon/${pokemonId}`)
     const pokemon = await response.json()
     return pokemon
 }
 
+async function viewStatusPokemon(pokemon_id) {
+    try {
+        const response = await fetch("http://127.0.0.1:3000/api/pokemon/",{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                pokemon_id:pokemon_id,
+                view:true,
+                catch:false,
+                in_team:false
+            })
+        })
+        console.log(response)
+        const pokemonView = await response.json()
+        return pokemonView
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+async function catchStatusPokemon(pokemon_id,viewStatus) {
+    try {
+        const response = await fetch(`http://127.0.0.1:3000/api/pokemon/catch/${pokemon_id}`,{
+            method:"PUT",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body: JSON.stringify({
+                pokemon_id:pokemon_id,
+                view:viewStatus,
+                catch:false,
+                in_team:false
+            })
+        })
+        const pokemonView = await response.json()
+        return pokemonView
+    } catch (error) {
+        console.error(error)
+    }
+}
 function displayPokemon(pokemon){
     const pokemonCard = document.createElement("div")
     pokemonCard.classList.add("pokemon-card")
@@ -46,7 +88,19 @@ function showPokemonDetail(pokemon){
     <p>Altura: ${pokemon.height} m</p>
     <p>Peso: ${pokemon.weight} kg</p>
     <p>Tipos: ${pokemon.types}</p>
+    <p>Visto: ${pokemon.view}</p>
+    <p>Capturado: ${pokemon.catch}</p>
+    <p>En el equipo: ${pokemon.inTeam}</p>
     `
+    const viewStatusButton = document.createElement("button")
+    viewStatusButton.innerHTML = "Pokemon visto"
+    viewStatusButton.addEventListener("click",()=>viewStatusPokemon(pokemon.pokemon_id))
+    pokemonInfo.appendChild(viewStatusButton)
+
+    const catchStatusButton = document.createElement("button")
+    catchStatusButton.innerHTML ="Captura el pokemon"
+    catchStatusButton.addEventListener("click",()=>catchStatusPokemon(pokemon.pokemon_id,pokemon.view))
+    pokemonInfo.appendChild(catchStatusButton)
     return
 }
 
